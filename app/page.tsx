@@ -3,6 +3,7 @@ import UserColorPool from "@/components/userColorPool";
 import UserResponse from "@/components/userResponse";
 import React, { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export type ColorInfo = {
   id: string;
@@ -15,8 +16,10 @@ const DashboardPage = () => {
   const [colors, setColors] = useState<ColorInfo[]>([]);
   const [colorID, setColorID] = useState<string>("");
   const [color, setColor] = useState<string>("");
+  const router = useRouter();
 
-  const [email, setEmail] = useState<string>("");
+  // const [email, setEmail] = useState<string>("");
+  const [number, setNumber] = useState<string>("");
   const [msg, setMsg] = useState<string>("");
 
   function generateRandomColor(): string {
@@ -47,9 +50,18 @@ const DashboardPage = () => {
     return color;
   }
 
-  const fetchColors = async (email: string) => {
+  const fetchColors = async (number: string) => {
+    if (!number) {
+      setMsg("You must enter a number");
+      setColors([]);
+      setColorID("");
+      setColor("");
+      return;
+    }
+
     const data = await axios.get(
-      `https://gift-exchange-web-backend.onrender.com/${email}`,
+      `https://gift-exchange-web-backend.onrender.com/${number}`,
+      // `http://localhost:5000/${number}`,
     );
     console.log("data", data);
     if (data.data.status === "error") {
@@ -78,18 +90,22 @@ const DashboardPage = () => {
       });
     });
     setColors(arr);
+    setColorID("");
+    setColor("");
   };
 
   const handleSubmitColorResponse = async () => {
     const userValueResponse = await axios.get(
-      `https://gift-exchange-web-backend.onrender.com/user/${email}`,
+      `https://gift-exchange-web-backend.onrender.com/user/${number}`,
+      // `http://localhost:5000/user/${number}`,
     );
     console.log("user", userValueResponse);
     const response = await axios.put(
       `https://gift-exchange-web-backend.onrender.com/${userValueResponse.data.user._id}/${colorID}`,
+      // `http://localhost:5000/${userValueResponse.data.user._id}/${colorID}`,
     );
     console.log("response", response);
-    window.location.reload();
+    router.push("/success");
   };
 
   const handleColorChange = (colorInfo: ColorInfo) => {
@@ -116,26 +132,25 @@ const DashboardPage = () => {
 
         <div className="w-full max-w-sm min-w-[200px] flex flex-col gap-3">
           <p>
-            Enter your email here and submit you email to be able to view the
-            color options
+            Enter your email, and then click one of the colors to make a choice
           </p>
           <label className="block text-sm text-slate-600">
-            Email
+            Your Number
             <p className="text-sm text-red-600">{msg}</p>
           </label>
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            value={number}
+            onChange={(e) => setNumber(e.target.value)}
             className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-            placeholder="Enter email here..."
+            placeholder="Enter your number here..."
           />
           <button
             type="submit"
             className="bg-green-600 text-white px-3 py-2 rounded-lg"
-            onClick={() => fetchColors(email)}
+            onClick={() => fetchColors(number)}
           >
-            Submit Email
+            Submit Number
           </button>
         </div>
 
