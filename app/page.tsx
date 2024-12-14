@@ -132,10 +132,11 @@ const DashboardPage = () => {
 
         <div className="w-full max-w-sm min-w-[200px] flex flex-col gap-3">
           <p>
-            1. Enter your email and click the "Submit Number" button and then click one of the colors to make a choice
+            1. Enter your number and click the &quot;Submit Number&quot; button
           </p>
           <p>
-            2. click on one of the colors which will appear(any color which cannot be clicked has already been chosen by someone else)
+            2. click on one of the colors which will appear(any color which
+            cannot be clicked has already been chosen by someone else)
           </p>
           <label className="block text-sm text-slate-600">
             Your Number
