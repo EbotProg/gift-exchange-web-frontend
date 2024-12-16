@@ -60,8 +60,8 @@ const DashboardPage = () => {
     }
 
     const data = await axios.get(
-      `https://gift-exchange-web-backend.onrender.com/${number}`,
-      // `http://localhost:5000/${number}`,
+      `https://gift-exchange-web-backend.onrender.com/getall/${number}`,
+      // `http://localhost:5000/getall/${number}`,
     );
     console.log("data", data);
     if (data.data.status === "error") {
@@ -101,8 +101,8 @@ const DashboardPage = () => {
     );
     console.log("user", userValueResponse);
     const response = await axios.put(
-      `https://gift-exchange-web-backend.onrender.com/${userValueResponse.data.user._id}/${colorID}`,
-      // `http://localhost:5000/${userValueResponse.data.user._id}/${colorID}`,
+      `https://gift-exchange-web-backend.onrender.com/update/${userValueResponse.data.user._id}/${colorID}`,
+      // `http://localhost:5000/update/${userValueResponse.data.user._id}/${colorID}`,
     );
     console.log("response", response);
     router.push("/success");
