@@ -16,6 +16,10 @@ const DashboardPage = () => {
   const [colors, setColors] = useState<ColorInfo[]>([]);
   const [colorID, setColorID] = useState<string>("");
   const [color, setColor] = useState<string>("");
+  const [submitNumberIsLoading, setSubmitNumberIsLoading] =
+    useState<boolean>(false);
+  const [submitColorIsLoading, setSubmitColorIsLoading] =
+    useState<boolean>(false);
   const router = useRouter();
 
   // const [email, setEmail] = useState<string>("");
@@ -51,11 +55,13 @@ const DashboardPage = () => {
   }
 
   const fetchColors = async (number: string) => {
+    setSubmitNumberIsLoading(true);
     if (!number) {
       setMsg("You must enter a number");
       setColors([]);
       setColorID("");
       setColor("");
+      setSubmitNumberIsLoading(false);
       return;
     }
 
@@ -69,6 +75,7 @@ const DashboardPage = () => {
       setColors([]);
       setColorID("");
       setColor("");
+      setSubmitNumberIsLoading(false);
       return;
     }
     setMsg("");
@@ -92,9 +99,11 @@ const DashboardPage = () => {
     setColors(arr);
     setColorID("");
     setColor("");
+    setSubmitNumberIsLoading(false);
   };
 
   const handleSubmitColorResponse = async () => {
+    setSubmitColorIsLoading(true);
     const userValueResponse = await axios.get(
       `https://gift-exchange-web-backend.onrender.com/user/${number}`,
       // `http://localhost:5000/user/${number}`,
@@ -153,8 +162,9 @@ const DashboardPage = () => {
             type="submit"
             className="bg-green-600 text-white px-3 py-2 rounded-lg"
             onClick={() => fetchColors(number)}
+            disabled={submitNumberIsLoading}
           >
-            Submit Number
+            {submitNumberIsLoading ? "Please wait..." : "Submit Number"}
           </button>
         </div>
 
@@ -173,11 +183,11 @@ const DashboardPage = () => {
 
             <div>
               <button
-                disabled={color === "" ? true : false}
+                disabled={color === "" || submitColorIsLoading ? true : false}
                 className="bg-green-600 text-white px-3 py-2 rounded-lg disabled:bg-green-200"
                 onClick={handleSubmitColorResponse}
               >
-                Submit Color
+                {submitColorIsLoading ? "Please wait..." : "Submit Color"}
               </button>
             </div>
           </div>
